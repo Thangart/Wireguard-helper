@@ -66,42 +66,6 @@ Version()
 ############################################################
 # Argument parsing                                         #
 ############################################################
-# while getopts ":hvxds:a:n:k:i:u:" option; do
-#    case $option in
-#       h) # display Help
-#          Help
-#          exit;;
-#       v) #print version
-#          Version
-#          exit;;
-#       d)
-#          SYSTEMD=1
-#          ;;
-#       s)
-#          SERVER=$OPTARG
-#          ;;
-#       i)
-#          IDENTITYFILE=$OPTARG
-#          ;;
-#       a)
-#          IP=$OPTARG
-#          ;; 
-#       n)
-#          ALLOWED_IPS=$OPTARG
-#          ;;
-#       k)
-#          KEEPALIVE=$OPTARG
-#          ;;
-#       u)
-#          USERNAME=$OPTARG
-#          ;;
-#       \?) # Invalid option
-#          echo "Error: Invalid option"
-#          exit;;
-#    esac
-# done
-
-
 _setArgs(){
   while [ "${1:-}" != "" ]; do
     case "$1" in
@@ -235,14 +199,12 @@ else
    echo "Setup trough ssh"
    echo "If sudo requires a password type the remote servers sudo password in the upcoming message."
 
-   echo "sudo wg set wg0 peer $PUBLIC_KEY allowed-ips ${IP_ip[0]}/32 && wg show wg0 public-key"
    if [[ "$USERNAME" == "" ]]; then
       SERVER_PUBLIC_KEY=`ssh -t -i $IDENTITYFILE ${SERVER_IP[0]} "sudo wg set wg0 peer $PUBLIC_KEY allowed-ips ${IP_ip[0]}/32 && wg show wg0 public-key"`
    else
       SERVER_PUBLIC_KEY=`ssh -t -i $IDENTITYFILE $USERNAME@${SERVER_IP[0]} "sudo wg set wg0 peer $PUBLIC_KEY allowed-ips ${IP_ip[0]}/32 && wg show wg0 public-key"`
    fi
 fi
-echo $SERVER_PUBLIC_KEY
 
 ############################################################
 # Generating and installing config                         #
