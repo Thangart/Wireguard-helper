@@ -19,7 +19,6 @@ SERVER_PUBLIC_KEY=""
 KEY_LOCATION="/etc/wireguard/privatekey"
 CONFIG_LOCATION="/etc/wireguard/wg0.conf"
 KEEPALIVE=0
-NEEDS_STOP=0
 
 ############################################################
 # Help                                                     #
