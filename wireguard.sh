@@ -6,6 +6,7 @@
 
 WIREGUARD_BIN="/usr/bin/wg"
 VERSION="1.0"
+VERBOSE=0
 SYSTEMD=0
 SERVER=""
 IDENTITYFILE=""
@@ -40,6 +41,7 @@ Help()
    echo "--allowed_ips     the allowed list of ip addresses that the local client should be able to reach ip/subnet. If empty it will be 0.0.0.0/0 (forward all trafic trough the vpn)"
    echo "--keepalive       Set the keepalive option in seconds (0 is disabled) in example -k 60"
    echo "--pub_key         Set the publickey of the remote server. If you set the ssh connection variables the application with retrieve the public key from the server"
+   echo "--verbose         Enables debugging messages"
    echo
    echo "If you want add the client to the server trough ssh set the following option:"
    echo "--identity_file   The identityfile to connect via ssh to the remote server"
@@ -75,6 +77,9 @@ _setArgs(){
       "--version") #print version
          Version
          exit;;
+      "--verbose")
+         VERBOSE=1
+         ;;
       "--deamon")
          SYSTEMD=1
          ;;
@@ -182,6 +187,30 @@ fi
 PUBLIC_KEY=`cat $KEY_LOCATION | wg pubkey`
 PRIVATE_KEY=`cat $KEY_LOCATION`
 
+# Verbose logging of state
+if [[ $VERBOSE -eq 1 ]]; then
+   echo
+   echo
+   echo "[*] Verbose logging enabled"
+   echo "[*] Application version:            $VERSION"
+   echo
+   echo "[*] Set options:"
+   echo "[*] Server address                  $SERVER"
+   echo "[*] Local tunnel IP                 $IP"
+   echo "[*] Local allowed IP's              $ALLOWED_IPS"
+   echo "[*] Keepalive option =              $KEEPALIVE"
+   echo "[*] SSH Username =                  $USERNAME"
+   echo "[*] SSH idenitityfile location =    $IDENTITYFILE"
+   echo "[*] Start application as systemd =  $SYSTEMD"
+
+   echo "[*] Local public key =              $PUBLIC_KEY"
+   echo "[*] Local Private key =             $PRIVATE_KEY"
+   echo 
+   echo
+fi
+
+
+
 
 ############################################################
 # Setting the server configuration                         #
@@ -204,6 +233,15 @@ else
    else
       SERVER_PUBLIC_KEY=`ssh -t -i $IDENTITYFILE $USERNAME@${SERVER_IP[0]} "sudo wg set wg0 peer $PUBLIC_KEY allowed-ips ${IP_ip[0]}/32 && wg show wg0 public-key"`
    fi
+
+   if [[ $VERBOSE -eq 1 ]]; then
+   echo
+   echo
+   echo "[*] Server public key:              $SERVER_PUBLIC_KEY"
+   echo
+   echo
+fi
+
 fi
 
 ############################################################
