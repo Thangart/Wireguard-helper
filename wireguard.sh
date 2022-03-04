@@ -31,19 +31,19 @@ Help()
    echo
    echo "Syntax: wireguard.sh [-h|v|d\s\i\a\n\k]"
    echo "options:"
-   echo "h           Print this Help."
-   echo "V           Print software version and exit."
-   echo "x           Remove the current config locally and from server"
-   echo "d           Start as systemd service"
-   echo "s           The remote servers hostname or ip with port ip:port"
-   echo "a           The ip address that the local connection should use with subnet exmpl: 10.20.30.2/24"
-   echo "n           the allowed list of ip addresses that the local client should be able to reach ip/subnet. If empty it will be 0.0.0.0/0 (forward all trafic trough the vpn)"
-   echo "k           Set the keepalive option in seconds (0 is disabled) in example -k 60"
-   echo "c           Set the publickey of the remote server. If you set the ssh connection variables the application with retrieve the public key from the server"
+   echo "--help            Print this Help."
+   echo "--version         Print software version and exit."
+   echo "--destroy         Remove the current config locally and from server"
+   echo "--deamon          Start as systemd service"
+   echo "--server          The remote servers hostname or ip with port ip:port"
+   echo "--local_ip        The ip address that the local connection should use with subnet exmpl: 10.20.30.2/24"
+   echo "--allowed_ips     the allowed list of ip addresses that the local client should be able to reach ip/subnet. If empty it will be 0.0.0.0/0 (forward all trafic trough the vpn)"
+   echo "--keepalive       Set the keepalive option in seconds (0 is disabled) in example -k 60"
+   echo "--pub_key         Set the publickey of the remote server. If you set the ssh connection variables the application with retrieve the public key from the server"
    echo
    echo "If you want add the client to the server trough ssh set the following option:"
-   echo "i           The identityfile to connect via ssh to the remote server"
-   echo "u           Username to connect to trough ssh (optional)"
+   echo "--identity_file   The identityfile to connect via ssh to the remote server"
+   echo "--ssh_username    Username to connect to trough ssh (optional)"
 }
 
 ############################################################
@@ -66,40 +66,87 @@ Version()
 ############################################################
 # Argument parsing                                         #
 ############################################################
-while getopts ":hvxds:a:n:k:i:u:" option; do
-   case $option in
-      h) # display Help
+# while getopts ":hvxds:a:n:k:i:u:" option; do
+#    case $option in
+#       h) # display Help
+#          Help
+#          exit;;
+#       v) #print version
+#          Version
+#          exit;;
+#       d)
+#          SYSTEMD=1
+#          ;;
+#       s)
+#          SERVER=$OPTARG
+#          ;;
+#       i)
+#          IDENTITYFILE=$OPTARG
+#          ;;
+#       a)
+#          IP=$OPTARG
+#          ;; 
+#       n)
+#          ALLOWED_IPS=$OPTARG
+#          ;;
+#       k)
+#          KEEPALIVE=$OPTARG
+#          ;;
+#       u)
+#          USERNAME=$OPTARG
+#          ;;
+#       \?) # Invalid option
+#          echo "Error: Invalid option"
+#          exit;;
+#    esac
+# done
+
+
+_setArgs(){
+  while [ "${1:-}" != "" ]; do
+    case "$1" in
+      "--help") # display Help
          Help
          exit;;
-      v) #print version
+      "--version") #print version
          Version
          exit;;
-      d)
+      "--deamon")
          SYSTEMD=1
          ;;
-      s)
-         SERVER=$OPTARG
+      "--server")
+         shift
+         SERVER=$1
          ;;
-      i)
-         IDENTITYFILE=$OPTARG
+      "--identity_file")
+         shift
+         IDENTITYFILE=$1
          ;;
-      a)
-         IP=$OPTARG
+      "--local_ip")
+         shift
+         IP=$1
          ;; 
-      n)
-         ALLOWED_IPS=$OPTARG
+      "--allowed_ips")
+         shift
+         ALLOWED_IPS=$1
          ;;
-      k)
-         KEEPALIVE=$OPTARG
+      "--keepalive")
+         shift
+         KEEPALIVE=$1
          ;;
-      u)
-         USERNAME=$OPTARG
+      "--ssh_username")
+         shift
+         USERNAME=$1
          ;;
       \?) # Invalid option
          echo "Error: Invalid option"
          exit;;
-   esac
-done
+    esac
+    shift
+  done
+}
+
+_setArgs "$@"
 
 
 ############################################################
