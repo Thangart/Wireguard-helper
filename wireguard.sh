@@ -70,7 +70,7 @@ Version()
 _setArgs(){
   while [ "${1:-}" != "" ]; do
     case "$1" in
-      "--help") # display Help
+      "--help" | '-h') # display Help
          Help
          exit;;
       "--version") #print version
