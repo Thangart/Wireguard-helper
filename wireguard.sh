@@ -334,7 +334,7 @@ fi
 
 ############################################################
 # Starting the wireguard tunnel                            #
-############################################################ALLOWED_IPS_ip
+############################################################
 
 if [[ $SYSTEMD -ne 0 ]]; then
    echo "Starting the tunnel as a service with persistency"
