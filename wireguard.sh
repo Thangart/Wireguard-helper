@@ -110,6 +110,10 @@ _setArgs(){
          shift
          KEEPALIVE=$1
          ;;
+      "--pub_key")
+         shift
+         SERVER_PUBLIC_KEY=$1
+         ;;
       "--ssh_username")
          shift
          USERNAME=$1
