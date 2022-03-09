@@ -155,14 +155,14 @@ fi
 
 # Server address
 if [[ "$SERVER" == "" ]]; then
-   echo "Please use the -s option to set the server address. exiting"
+   echo "Please use the --server option to set the server address. exiting"
    exit
 fi
 
 
 # Local IP
 if [[ "$IP" == "" ]]; then
-   echo "Please use the -a option to set the local ip and subnet. exiting"
+   echo "Please use the --local_ip option to set the local ip and subnet. exiting"
    exit
 fi
 
