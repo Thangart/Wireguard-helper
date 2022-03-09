@@ -186,3 +186,15 @@ systemctl stop wg-quick@wg0.service
 systemctl start wg-quick@wg0.service
 
 echo "Server install script done."
+
+############################################################
+# Set IP forwading                                         #
+############################################################
+
+if [[ $SERVER_FORWARD -eq 1 ]]; then
+   echo
+   echo "Setting ip forwarding to 1"
+   sysctl -w net.ipv4.ip_forward=1
+   sed -i 's/#net.ipv4.ip_forward/net.ipv4.ip_forward/g' /etc/sysctl.conf
+   sed -i 's/net.ipv4.ip_forward=0/net.ipv4.ip_forward=1/g' /etc/sysctl.conf
+fi
