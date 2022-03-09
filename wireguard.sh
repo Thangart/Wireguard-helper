@@ -33,7 +33,7 @@ Help()
    # Display Help
    echo "Adds a wireguard setup to the local machine."
    echo
-   echo "Syntax: wireguard.sh [-h|v|d\s\i\a\n\k]"
+   echo "Syntax: wireguard.sh [options]"
    echo "options:"
    echo "--help            Print this Help."
    echo "--version         Print software version and exit."
