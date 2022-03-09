@@ -190,7 +190,12 @@ fi
 PUBLIC_KEY=`cat $KEY_LOCATION | wg pubkey`
 PRIVATE_KEY=`cat $KEY_LOCATION`
 
-# Verbose logging of state
+
+############################################################
+# Verbose logging                                          #
+############################################################
+
+
 if [[ $VERBOSE -eq 1 ]]; then
    echo
    echo
