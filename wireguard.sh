@@ -151,7 +151,7 @@ if [[ "$ALLOWED_IPS" == "" ]]; then
 fi
 
 
-# Check if wireguard is installed and else install it
+# Check if wireguard is installed and otherwise install it
 if test -f "$WIREGUARD_BIN"; then
     echo "Wireguard is installed."
 else
