@@ -114,6 +114,16 @@ if [[ $EUID -ne 0 ]]; then
    exit
 fi
 
+if [[ "$SERVER_CONFIG_IP" == "" ]]; then
+   echo "Please use the --server_vpn_ip option to set the local vpn ip *.*.*.*/*"
+   exit
+fi
+if [[ "$SERVER_PUBLIC_INTERFACE" == "" ]]; then
+   echo "Please use the --server_int option to set the server's public interface"
+   exit
+fi
+
+
 # Check if wireguard is installed and otherwise install it
 if test -f "$WIREGUARD_BIN"; then
     echo "Wireguard is installed."
