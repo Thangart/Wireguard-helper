@@ -173,6 +173,19 @@ if [[ "$ALLOWED_IPS" == "" ]]; then
    ALLOWED_IPS="0.0.0.0/0"
 fi
 
+# Install check
+if [[ "$SERVER_INSTALL" -eq 1 ]]; then
+   if [[ "$SERVER_WIREGUARD_IP" == "" ]]; then
+      echo "Server install detected. Please use the --server_vpn_ip option to set the local vpn ip *.*.*.*/*"
+      exit
+   fi
+   if [[ "$SERVER_PUBLIC_INTERFACE" == "" ]]; then
+      echo "Server install detected. Please use the --server_int option to set the server's public interface"
+      exit
+   fi
+fi
+
+
 ############################################################
 #                    Configuration checks                  #
 ############################################################
