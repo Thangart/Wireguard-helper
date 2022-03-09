@@ -5,7 +5,7 @@
 ############################################################
 
 WIREGUARD_BIN="/usr/bin/wg"
-VERSION="1.0"
+VERSION="1.1"
 VERBOSE=0
 SYSTEMD=0
 SERVER=""
@@ -19,6 +19,10 @@ SERVER_PUBLIC_KEY=""
 KEY_LOCATION="/etc/wireguard/privatekey"
 CONFIG_LOCATION="/etc/wireguard/wg0.conf"
 KEEPALIVE=0
+SERVER_INSTALL=0
+SERVER_FORWARD=0
+SERVER_WIREGUARD_IP=""
+SERVER_PUBLIC_INTERFACE=""
 
 ############################################################
 # Help                                                     #
@@ -45,6 +49,17 @@ Help()
    echo "If you want add the client to the server trough ssh set the following option:"
    echo "--identity_file   The identityfile to connect via ssh to the remote server"
    echo "--ssh_username    Username to connect to trough ssh (optional)"
+   echo
+   echo "To Install the server use the following options:"
+   echo "--server_install  To set the script to install the server component"
+   echo "--server_forward  To set the server to allow ip forwarding"
+   echo "--server_vpn_ip   Set the ip of the server example: 10.20.30.1/24"
+   echo "--server_int      Set the public interface of the server. ususually eth0"
+   echo
+   echo "An example command could be:"
+   echo
+   echo "sudo ./wireguard.sh --keepalive 10 --server x.x.x.x:51820 --local_ip 10.20.30.2/24 --allowed_ips 10.20.30.0/24 --identity_file ~/.ssh/digitalocean --verbose --server_install --server_vpn_ip 10.20.30.1/24 --server_int eth0
+"
 }
 
 ############################################################
@@ -56,13 +71,6 @@ Version()
    # Display Help
    echo "Wireguard helper script version $VERSION"
 }
-
-
-############################################################
-# Install serverside                                       #
-############################################################
-
-
 
 ############################################################
 # Argument parsing                                         #
@@ -105,6 +113,20 @@ _setArgs(){
       "--ssh_username")
          shift
          USERNAME=$1
+         ;;
+      "--server_install")
+         SERVER_INSTALL=1
+         ;;
+      "--server_forward")
+         SERVER_FORWARD=1
+         ;;
+      "--server_vpn_ip")
+         shift
+         SERVER_WIREGUARD_IP=$1
+         ;;
+      "--server_int")
+         shift
+         SERVER_PUBLIC_INTERFACE=$1
          ;;
       \?) # Invalid option
          echo "Error: Invalid option"
@@ -215,10 +237,29 @@ if [[ $VERBOSE -eq 1 ]]; then
    echo "[*] Local Private key =             $PRIVATE_KEY"
    echo 
    echo
+   if [[ $SERVER_INSTALL -eq 1 ]]; then
+       echo "[*] Setting server forwarding = $SERVER_FORWARD"
+       echo "[*] Server vpn address =        $SERVER_WIREGUARD_IP"
+       echo "[*] Server public interface =   $SERVER_PUBLIC_INTERFACE"
+       echo
+   fi
 fi
 
+############################################################
+# Server Installation                                          #
+############################################################
 
+if [[ $SERVER_INSTALL -eq 1 ]]; then
+   IFS=':' read -ra SERVER_IP <<< "$SERVER"
 
+   echo
+   echo "Starting the installation of the server. First copying the installation script over. A password for the identity file may be required"
+   scp -i $IDENTITYFILE server.sh ${SERVER_IP[0]}:~/
+   echo
+   echo "---- executing install script -----"
+   echo "A password for the identityfile may be required"
+   ssh -t -i $IDENTITYFILE ${SERVER_IP[0]} "./server.sh --server_vpn_ip $SERVER_WIREGUARD_IP --server_int $SERVER_PUBLIC_INTERFACE"
+fi
 
 ############################################################
 # Setting the server configuration                         #
