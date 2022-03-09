@@ -159,6 +159,12 @@ else
     apt install -y wireguard
 fi
 
+# Check if wireguard allready has a tunnel
+if [[ $(ip a | grep wg0) ]]; then
+   echo "Wireguard is allready running. Killing current connection"
+   wg-quick down wg0
+fi
+
 
 # Check if config allready exists.
 if [ -f "$CONFIG_LOCATION" ]; then
@@ -168,13 +174,11 @@ if [ -f "$CONFIG_LOCATION" ]; then
    echo "Cancelled by user. exiting"
    exit
    fi
+   # Create a backup of the old config
+   STAMP=`date +%m-%d-%Y-%T`
+   mv "$CONFIG_LOCATION" "$CONFIG_LOCATION.$STAMP.bak"
 fi
 
-# Check if wireguard allready has a tunnel
-if [[ $(ip a | grep wg0) ]]; then
-   echo "Wireguard is allready running. Killing current connection"
-   wg-quick down wg0
-fi
 
 # Check if a privatekey is generated
 if ! [ -f "$KEY_LOCATION" ]; then
