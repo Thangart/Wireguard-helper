@@ -149,29 +149,33 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
-# Check userinput
+############################################################
+#                    Input checks                          #
+############################################################
 
-
-## Server address
+# Server address
 if [[ "$SERVER" == "" ]]; then
    echo "Please use the -s option to set the server address. exiting"
    exit
 fi
 
 
-## Local IP
+# Local IP
 if [[ "$IP" == "" ]]; then
    echo "Please use the -a option to set the local ip and subnet. exiting"
    exit
 fi
 
 
-## Allowed_IPS
+# Allowed_IPS
 if [[ "$ALLOWED_IPS" == "" ]]; then
    echo "No Allowed_IPS set. Using 0.0.0.0/0"
    ALLOWED_IPS="0.0.0.0/0"
 fi
 
+############################################################
+#                    Configuration checks                  #
+############################################################
 
 # Check if wireguard is installed and otherwise install it
 if test -f "$WIREGUARD_BIN"; then
