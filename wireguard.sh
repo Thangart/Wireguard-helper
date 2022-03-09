@@ -185,6 +185,15 @@ if [[ "$SERVER_INSTALL" -eq 1 ]]; then
    fi
 fi
 
+# Check if Identityfile is set. otherwise make sure the pubkey is set.
+if [[ "$IDENTITYFILE" == "" ]]; then
+   if [[ "$SERVER_PUBLIC_KEY" == "" ]]; then
+      echo
+      echo "No ssh connection will be made but the servers public key is not given."
+      echo "Please use the --pub_key option to the servers public key"
+      exit
+   fi
+fi
 
 ############################################################
 #                    Configuration checks                  #
