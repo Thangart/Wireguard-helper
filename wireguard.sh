@@ -227,12 +227,14 @@ fi
 IFS='/' read -ra IP_ip <<< "$IP"
 
 if [[ "$IDENTITYFILE" == "" ]]; then
+   echo
    echo "No setup trough ssh"
    echo "Run the command on the server:"
    echo "sudo wg set wg0 peer $PUBLIC_KEY allowed-ips ${IP_ip[0]}/32"
 else
    IFS=':' read -ra SERVER_IP <<< "$SERVER"
 
+   echo
    echo "Setup trough ssh"
    echo "If sudo requires a password type the remote servers sudo password in the upcoming message."
 
