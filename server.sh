@@ -77,8 +77,7 @@ _setArgs(){
          SYSTEMD=1
          ;;
       "--server_forward")
-         shift
-         SERVER_FORWARD=$1
+         SERVER_FORWARD=1
          ;;
       "--server_vpn_ip")
          shift

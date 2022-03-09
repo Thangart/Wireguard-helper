@@ -288,7 +288,11 @@ if [[ $SERVER_INSTALL -eq 1 ]]; then
    echo
    echo "---- executing install script -----"
    echo "A password for the identityfile may be required"
-   ssh -t -i $IDENTITYFILE ${SERVER_IP[0]} "./server.sh --server_vpn_ip $SERVER_WIREGUARD_IP --server_int $SERVER_PUBLIC_INTERFACE"
+   if [[ $SERVER_FORWARD -eq 1 ]]; then
+      ssh -t -i $IDENTITYFILE ${SERVER_IP[0]} "./server.sh --server_vpn_ip $SERVER_WIREGUARD_IP --server_int $SERVER_PUBLIC_INTERFACE --server_forward"
+   else
+      ssh -t -i $IDENTITYFILE ${SERVER_IP[0]} "./server.sh --server_vpn_ip $SERVER_WIREGUARD_IP --server_int $SERVER_PUBLIC_INTERFACE"
+   fi
 fi
 
 ############################################################
