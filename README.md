@@ -50,7 +50,7 @@ vagrant plugin install vagrant-hostmanager
 Start the boxes and connect to client01 with:
 ```
 vagrant up
-vahrant ssh client01
+vagrant ssh client01
 ```
 Then you can use the wireguard script located in the folder /wireguard_script to install the server and clients on the many devices.
 The server and client01 can be installed with the command:
