@@ -294,15 +294,15 @@ if [[ $SERVER_INSTALL -eq 1 ]]; then
    echo "A password for the identityfile may be required"
    if [[ $SERVER_FORWARD -eq 1 ]]; then
       if [[ "$USERNAME" == "" ]]; then
-         ssh -t -i $IDENTITYFILE ${SERVER_IP[0]} "./server.sh --server_vpn_ip $SERVER_WIREGUARD_IP --server_int $SERVER_PUBLIC_INTERFACE --server_forward"
+         ssh -t -i $IDENTITYFILE ${SERVER_IP[0]} "sudo ./server.sh --server_vpn_ip $SERVER_WIREGUARD_IP --server_int $SERVER_PUBLIC_INTERFACE --server_forward"
       else
-         ssh -t -i $IDENTITYFILE $USERNAME@${SERVER_IP[0]} "./server.sh --server_vpn_ip $SERVER_WIREGUARD_IP --server_int $SERVER_PUBLIC_INTERFACE --server_forward"
+         ssh -t -i $IDENTITYFILE $USERNAME@${SERVER_IP[0]} "sudo ./server.sh --server_vpn_ip $SERVER_WIREGUARD_IP --server_int $SERVER_PUBLIC_INTERFACE --server_forward"
       fi
    else
       if [[ "$USERNAME" == "" ]]; then
-         ssh -t -i $IDENTITYFILE ${SERVER_IP[0]} "./server.sh --server_vpn_ip $SERVER_WIREGUARD_IP --server_int $SERVER_PUBLIC_INTERFACE"
+         ssh -t -i $IDENTITYFILE ${SERVER_IP[0]} " sudo ./server.sh --server_vpn_ip $SERVER_WIREGUARD_IP --server_int $SERVER_PUBLIC_INTERFACE"
       else
-         ssh -t -i $IDENTITYFILE $USERNAME@${SERVER_IP[0]} "./server.sh --server_vpn_ip $SERVER_WIREGUARD_IP --server_int $SERVER_PUBLIC_INTERFACE"
+         ssh -t -i $IDENTITYFILE $USERNAME@${SERVER_IP[0]} "sudo ./server.sh --server_vpn_ip $SERVER_WIREGUARD_IP --server_int $SERVER_PUBLIC_INTERFACE"
       fi
    fi
 fi
@@ -326,9 +326,9 @@ else
    echo "If sudo requires a password type the remote servers sudo password in the upcoming message."
 
    if [[ "$USERNAME" == "" ]]; then
-      SERVER_PUBLIC_KEY=`ssh -t -i $IDENTITYFILE ${SERVER_IP[0]} "sudo wg set wg0 peer $PUBLIC_KEY allowed-ips ${IP_ip[0]}/32 && wg show wg0 public-key"`
+      SERVER_PUBLIC_KEY=`ssh -t -i $IDENTITYFILE ${SERVER_IP[0]} "sudo wg set wg0 peer $PUBLIC_KEY allowed-ips ${IP_ip[0]}/32 && sudo wg show wg0 public-key"`
    else
-      SERVER_PUBLIC_KEY=`ssh -t -i $IDENTITYFILE $USERNAME@${SERVER_IP[0]} "sudo wg set wg0 peer $PUBLIC_KEY allowed-ips ${IP_ip[0]}/32 && wg show wg0 public-key"`
+      SERVER_PUBLIC_KEY=`ssh -t -i $IDENTITYFILE $USERNAME@${SERVER_IP[0]} "sudo wg set wg0 peer $PUBLIC_KEY allowed-ips ${IP_ip[0]}/32 && sudo wg show wg0 public-key"`
    fi
 
    if [[ $VERBOSE -eq 1 ]]; then

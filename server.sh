@@ -97,12 +97,7 @@ _setArgs "$@"
 
 # Root check
 if [[ $EUID -ne 0 ]]; then
-   echo "This script must be run as root requesting sudo rights" 
-   sudo su
-fi
-
-if [[ $EUID -ne 0 ]]; then
-   echo "This script must be run as root; Root request denied" 
+   echo "This script must be run as root or with sudo; exiting" 
    exit
 fi
 
