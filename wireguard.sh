@@ -284,14 +284,26 @@ if [[ $SERVER_INSTALL -eq 1 ]]; then
 
    echo
    echo "Starting the installation of the server. First copying the installation script over. A password for the identity file may be required"
-   scp -i $IDENTITYFILE server.sh ${SERVER_IP[0]}:~/
+   if [[ "$USERNAME" == "" ]]; then
+      scp -i $IDENTITYFILE server.sh ${SERVER_IP[0]}:~/
+   else
+      scp -i $USERNAME@$IDENTITYFILE server.sh ${SERVER_IP[0]}:~/
+   fi
    echo
    echo "---- executing install script -----"
    echo "A password for the identityfile may be required"
    if [[ $SERVER_FORWARD -eq 1 ]]; then
-      ssh -t -i $IDENTITYFILE ${SERVER_IP[0]} "./server.sh --server_vpn_ip $SERVER_WIREGUARD_IP --server_int $SERVER_PUBLIC_INTERFACE --server_forward"
+      if [[ "$USERNAME" == "" ]]; then
+         ssh -t -i $IDENTITYFILE ${SERVER_IP[0]} "./server.sh --server_vpn_ip $SERVER_WIREGUARD_IP --server_int $SERVER_PUBLIC_INTERFACE --server_forward"
+      else
+         ssh -t -i $IDENTITYFILE $USERNAME@${SERVER_IP[0]} "./server.sh --server_vpn_ip $SERVER_WIREGUARD_IP --server_int $SERVER_PUBLIC_INTERFACE --server_forward"
+      fi
    else
-      ssh -t -i $IDENTITYFILE ${SERVER_IP[0]} "./server.sh --server_vpn_ip $SERVER_WIREGUARD_IP --server_int $SERVER_PUBLIC_INTERFACE"
+      if [[ "$USERNAME" == "" ]]; then
+         ssh -t -i $IDENTITYFILE ${SERVER_IP[0]} "./server.sh --server_vpn_ip $SERVER_WIREGUARD_IP --server_int $SERVER_PUBLIC_INTERFACE"
+      else
+         ssh -t -i $IDENTITYFILE $USERNAME@${SERVER_IP[0]} "./server.sh --server_vpn_ip $SERVER_WIREGUARD_IP --server_int $SERVER_PUBLIC_INTERFACE"
+      fi
    fi
 fi
 
