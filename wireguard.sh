@@ -287,7 +287,7 @@ if [[ $SERVER_INSTALL -eq 1 ]]; then
    if [[ "$USERNAME" == "" ]]; then
       scp -i $IDENTITYFILE server.sh ${SERVER_IP[0]}:~/
    else
-      scp -i $USERNAME@$IDENTITYFILE server.sh ${SERVER_IP[0]}:~/
+      scp -i $IDENTITYFILE server.sh $USERNAME@${SERVER_IP[0]}:~/
    fi
    echo
    echo "---- executing install script -----"
