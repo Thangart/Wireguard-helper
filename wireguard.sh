@@ -23,6 +23,7 @@ SERVER_INSTALL=0
 SERVER_FORWARD=0
 SERVER_WIREGUARD_IP=""
 SERVER_PUBLIC_INTERFACE=""
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 ############################################################
 # Help                                                     #
@@ -285,9 +286,9 @@ if [[ $SERVER_INSTALL -eq 1 ]]; then
    echo
    echo "Starting the installation of the server. First copying the installation script over. A password for the identity file may be required"
    if [[ "$USERNAME" == "" ]]; then
-      scp -i $IDENTITYFILE server.sh ${SERVER_IP[0]}:~/
+      scp -i $IDENTITYFILE $SCRIPT_DIR/server.sh ${SERVER_IP[0]}:~/
    else
-      scp -i $IDENTITYFILE server.sh $USERNAME@${SERVER_IP[0]}:~/
+      scp -i $IDENTITYFILE $SCRIPT_DIR/server.sh $USERNAME@${SERVER_IP[0]}:~/
    fi
    echo
    echo "---- executing install script -----"
